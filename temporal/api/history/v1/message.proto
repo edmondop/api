@@ -602,6 +602,7 @@ message StartChildWorkflowExecutionFailedEventAttributes {
     int64 workflow_task_completed_event_id = 7;
 }
 
+
 message ChildWorkflowExecutionStartedEventAttributes {
     // Namespace of the child workflow.
     // SDKs and UI tools should use `namespace` field but server must use `namespace_id` only.
@@ -683,6 +684,68 @@ message ChildWorkflowExecutionTerminatedEventAttributes {
     // Id of the `CHILD_WORKFLOW_EXECUTION_STARTED` event which this event corresponds to
     int64 started_event_id = 5;
 }
+
+message SignalWithStartChildWorkflowExecutionInitiatedEventAttributes {
+    // Namespace of the child workflow.
+    // SDKs and UI tools should use `namespace` field but server must use `namespace_id` only.
+    string namespace = 1;
+    string namespace_id = 2;
+    string workflow_id = 3;
+    temporal.api.common.v1.WorkflowType workflow_type = 4;
+    temporal.api.taskqueue.v1.TaskQueue task_queue = 5;
+    temporal.api.common.v1.Payloads workflow_input = 6;
+    // name/type of the signal to fire in the child workflow
+    string signal_name = 7;
+    // Serialized arguments to provide to the signal handler
+    temporal.api.common.v1.Payloads signal_input = 8;
+    // Total workflow execution timeout including retries and continue as new.
+    google.protobuf.Duration workflow_execution_timeout = 9 [(gogoproto.stdduration) = true];
+    // Timeout of a single workflow run.
+    google.protobuf.Duration workflow_run_timeout = 10 [(gogoproto.stdduration) = true];
+    // Timeout of a single workflow task.
+    google.protobuf.Duration workflow_task_timeout = 11 [(gogoproto.stdduration) = true];
+    // Default: PARENT_CLOSE_POLICY_TERMINATE.
+    temporal.api.enums.v1.ParentClosePolicy parent_close_policy = 12;
+    // The `WORKFLOW_TASK_COMPLETED` event which this command was reported with
+    int64 workflow_task_completed_event_id = 13;
+    // Default: WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE.
+    temporal.api.enums.v1.WorkflowIdReusePolicy workflow_id_reuse_policy = 14;
+    temporal.api.common.v1.RetryPolicy retry_policy = 15;
+    // If this child runs on a cron schedule, it will appear here
+    string cron_schedule = 16;
+    temporal.api.common.v1.Header header = 17;
+    temporal.api.common.v1.Memo memo = 18;
+    temporal.api.common.v1.SearchAttributes search_attributes = 19;
+    // If this is set, the workflow executing this command wishes to start the child workflow using
+    // a version compatible with the version that this workflow most recently ran on, if such
+    // behavior is possible.
+    bool use_compatible_version = 20;
+}
+
+message SignalWithStartChildWorkflowExecutionFailedEventAttributes {
+    // Namespace of the child workflow.
+    // SDKs and UI tools should use `namespace` field but server must use `namespace_id` only.
+    string namespace = 1;
+    string namespace_id = 8;
+    string workflow_id = 2;
+    temporal.api.common.v1.WorkflowType workflow_type = 3;
+    temporal.api.enums.v1.SignalWithStartChildWorkflowExecutionFailedCause cause = 4;
+    // Id of the `SIGNAL_WITH_START_CHILD_WORKFLOW_EXECUTION_INITIATED` event which this event corresponds to
+    int64 initiated_event_id = 6;
+    // The `WORKFLOW_TASK_COMPLETED` event which this command was reported with
+    int64 workflow_task_completed_event_id = 7;
+}
+
+message SignalWithStartChildWorkflowExecutionEventAttributes {
+    // id of the `SIGNAL_WITH_START_CHILD_WORKFLOW_EXECUTION_INITIATED` event this event corresponds to
+    int64 initiated_event_id = 1;
+    // Namespace of the workflow which was signaled.
+    // SDKs and UI tools should use `namespace` field but server must use `namespace_id` only.
+    string namespace = 2;
+    string namespace_id = 5;
+    temporal.api.common.v1.WorkflowExecution workflow_execution = 3;
+}
+
 
 message WorkflowPropertiesModifiedExternallyEventAttributes {
     // If set to a nonempty string, future workflow tasks for this workflow shall be dispatched on
@@ -814,6 +877,13 @@ message HistoryEvent {
         WorkflowPropertiesModifiedExternallyEventAttributes workflow_properties_modified_externally_event_attributes = 49;
         ActivityPropertiesModifiedExternallyEventAttributes activity_properties_modified_externally_event_attributes = 50;
         WorkflowPropertiesModifiedEventAttributes workflow_properties_modified_event_attributes = 51;
+        // (-- api-linter: core::0140::prepositions=disabled
+        //     aip.dev/not-precedent: "with" is used to indicate a composite call. --)
+        SignalWithStartChildWorkflowExecutionInitiatedEventAttributes signal_with_start_child_workflow_execution_initiated_event_attributes = 52;
+        // (-- api-linter: core::0140::prepositions=disabled
+        //     aip.dev/not-precedent: "with" is used to indicate a composite call. --)
+        SignalWithStartChildWorkflowExecutionFailedEventAttributes signal_with_start_child_workflow_execution_failed_event_attributes = 53;
+
     }
 }
 

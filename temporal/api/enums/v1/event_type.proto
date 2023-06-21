@@ -167,4 +167,8 @@ enum EventType {
     EVENT_TYPE_ACTIVITY_PROPERTIES_MODIFIED_EXTERNALLY = 45;
     // Workflow properties modified by user workflow code
     EVENT_TYPE_WORKFLOW_PROPERTIES_MODIFIED = 46;
+    // Temporal Server will try to signal a workflow if it exists, and start it and signal it if doesn't
+    EVENT_TYPE_SIGNAL_WITH_START_CHILD_WORKFLOW_EXECUTION_INITIATED = 47;
+    // Child Workflow execution cannot be be found nor started
+    EVENT_TYPE_SIGNAL_WITH_START_CHILD_WORKFLOW_EXECUTION_FAILED = 48;
 }
